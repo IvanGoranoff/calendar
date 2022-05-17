@@ -10,22 +10,34 @@ function App() {
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
 
- const handleFromDate = (fromDate) => {
+  const handleFromDate = (fromDate) => {
     setFromDate(fromDate);
-  }
+  };
+
+  const handleRangeDate = (e) => {
+    setFromDate(new Date())
+    setToDate(moment().add(e.target.value, 'd'))
+  }; 
   const handleToDate = (toDate) => {
-    if(fromDate > toDate) {
-        setToDate(fromDate)
+    if (fromDate > toDate) {
+      setToDate(fromDate);
     } else {
-        setToDate(toDate);
+      setToDate(toDate);
     }
-  }
+  };
   const DifferenceInTime = toDate - fromDate;
   const DifferenceInDays = DifferenceInTime / (1000 * 3600 * 24);
 
-  
   return (
-    <div style={{ display: "flex", justifyContent: "center",  paddingRight: "10px", alignItems: "center", height: "100vh" }}   >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        paddingRight: "10px",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           label="From Date"
@@ -35,7 +47,6 @@ function App() {
           minDate={moment().toDate()}
           renderInput={(params) => <TextField {...params} />}
           inputFormat="dd.MM.yyyy"
-          
         />
       </LocalizationProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -50,11 +61,11 @@ function App() {
         />
       </LocalizationProvider>
       <TextField
-        disabled
-        id="outlined-disabled"
-        label="Date range"
-        value={toDate ? DifferenceInDays : 0}
+        variant="outlined"
+        value={toDate ? DifferenceInDays : null}
+        onChange={(e) => handleRangeDate(e)}
       />
+     
     </div>
   );
 }
