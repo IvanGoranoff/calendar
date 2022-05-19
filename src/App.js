@@ -15,9 +15,9 @@ function App() {
   };
 
   const handleRangeDate = (e) => {
-    setFromDate(new Date())
-    setToDate(moment().add(e.target.value, 'd'))
-  }; 
+    setFromDate(new Date());
+    setToDate(moment()?.add(e.target.value, "d"));
+  };
   const handleToDate = (toDate) => {
     if (fromDate > toDate) {
       setToDate(fromDate);
@@ -25,17 +25,13 @@ function App() {
       setToDate(toDate);
     }
   };
-  const DifferenceInTime = toDate - fromDate;
-  const DifferenceInDays = DifferenceInTime / (1000 * 3600 * 24);
 
+  const DifferenceInTime = toDate - fromDate;
+  const DifferenceInDays = Math.round(DifferenceInTime / (1000 * 3600 * 24));
+  // console.log(toDate.diff(fromDate, 'days') )
   return (
     <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        paddingRight: "10px",
-        alignItems: "center",
-        height: "100vh",
+      style={{ display: "flex", justifyContent: "center", paddingRight: "10px", alignItems: "center", height: "100vh",
       }}
     >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -52,20 +48,16 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           label="To Date"
-          selected={new Date()}
-          value={toDate}
-          minDate={fromDate}
+          selected={fromDate <= toDate ? new Date() : null}
+          value={toDate >= fromDate ? toDate : null}
+          minDate={fromDate ? fromDate : new Date()}
           onChange={handleToDate}
           renderInput={(params) => <TextField {...params} />}
           inputFormat="dd.MM.yyyy"
         />
       </LocalizationProvider>
-      <TextField
-        variant="outlined"
-        value={toDate ? DifferenceInDays : null}
-        onChange={(e) => handleRangeDate(e)}
+      <TextField variant="outlined" value={toDate >= fromDate && fromDate ? DifferenceInDays : 0} onChange={(e) => handleRangeDate(e)}
       />
-     
     </div>
   );
 }
